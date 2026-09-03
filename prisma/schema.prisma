@@ -1,0 +1,180 @@
+// Prisma schema for Sri Suvabrata Bharati Astro-Vastu Consultation & Spiritual Wellness Platform
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CLIENT
+  SUPER_ADMIN
+  ASTROLOGER_STAFF
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum RelationType {
+  SELF
+  SPOUSE
+  CHILD
+  PARENT
+  PARTNER
+}
+
+enum ConsultationMode {
+  VIDEO
+  AUDIO
+  IN_PERSON_JALPAIGURI
+  IN_PERSON_SILIGURI
+}
+
+enum ConsultationStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id              String         @id @default(uuid())
+  phone           String         @unique
+  email           String?        @unique
+  name            String
+  role            Role           @default(CLIENT)
+  phoneVerified   Boolean        @default(false)
+  emailVerified   Boolean        @default(false)
+  twoFactorSecret String?        // For Admin TOTP (Google Authenticator)
+  twoFactorEnabled Boolean       @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  // Relations
+  birthProfiles   BirthProfile[]
+  consultations   Consultation[]
+  auditLogs       AuditLog[]
+
+  @@index([phone])
+}
+
+model BirthProfile {
+  id            String         @id @default(uuid())
+  userId        String
+  fullName      String
+  relation      RelationType   @default(SELF)
+  gender        Gender         @default(MALE)
+  dob           DateTime       // Exact Date of Birth
+  exactTime     String         // HH:mm format (e.g. 06:45)
+  placeOfBirth  String         // City, State, Country
+  latitude      Float?
+  longitude     Float?
+  timezone      String         @default("Asia/Kolkata")
+  rashi         String?        // Moon Sign (e.g. Vrishabha)
+  nakshatra     String?        // Birth Star (e.g. Rohini)
+  ascendant     String?        // Lagna (e.g. Vrishchika)
+  notes         String?        // Specific life concerns
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  consultations Consultation[]
+
+  @@index([userId])
+}
+
+model Service {
+  id              String         @id
+  title           String
+  bengaliTitle    String?
+  category        String         // vedic, vastu, kp, nadi, numerology, gemstone
+  badge           String?
+  durationMinutes Int
+  feeINR          Int
+  shortDesc       String
+  fullDesc        String
+  deliverables    String[]       // Array of service deliverables
+  modesAllowed    ConsultationMode[]
+  icon            String
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  consultations   Consultation[]
+}
+
+model Consultation {
+  id                String             @id @default(uuid())
+  bookingRef        String             @unique // e.g. SB-2026-9001
+  userId            String
+  serviceId         String
+  profileId         String
+  mode              ConsultationMode
+  chamberLocation   String?            // "Kadamtala Main Chamber" | "Cosmos Complex, Sevoke Rd" | "Online"
+  appointmentDate   DateTime
+  timeSlot          String             // e.g. "11:00 AM – 11:45 AM"
+  status            ConsultationStatus @default(PENDING)
+  paymentStatus     PaymentStatus      @default(PENDING)
+  amountINR         Int
+  paymentMethod     String?            // UPI, NetBanking, QR
+  paymentRef        String?            // Bank/Gateway reference
+  clientConcerns    String?            @db.Text
+  floorPlanUrl      String?            // Uploaded architectural plan for Vastu
+  astrologerRemedies String?           @db.Text // Upayas prescribed by Sri Suvabrata Bharati
+  meetingLink       String?            // Video room link
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  service           Service            @relation(fields: [serviceId], references: [id])
+  profile           BirthProfile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([appointmentDate])
+  @@index([status])
+}
+
+model CosmicPost {
+  id          String   @id @default(uuid())
+  title       String
+  category    String   // daily_horoscope, vastu_tip, video_discourse, remedy
+  excerpt     String   @db.Text
+  content     String   @db.Text
+  youtubeId   String?  // Astrological video discourse identifier
+  imageUrl    String?  // Shastric artwork / Vastu mandala
+  audioUrl    String?  // Shastric chanting or spoken guidance audio
+  publishedAt DateTime @default(now())
+  likes       Int      @default(0)
+  shares      Int      @default(0)
+  tags        String[]
+  isPublished Boolean  @default(true)
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  action    String   // e.g. "ACCOUNT_PURGED", "DATA_EXPORTED", "ADMIN_LOGIN_2FA"
+  ipAddress String?
+  userAgent String?
+  metadata  Json?
+  timestamp DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([timestamp])
+}
