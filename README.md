@@ -3,7 +3,7 @@
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.3.4-black?logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.2.8-blue?logo=react)](https://react.dev/)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind-CSS_v4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
-[![Render Deploy](https://img.shields.io/badge/Deploy-Render.com-46E3B7?logo=render)](https://render.com/)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/tj2002roy/AstroVastu)
 
 A full-stack, mobile-first consultation ecosystem and Shastric authority platform engineered for **Sri Suvabrata Bharati** (Gold Medalist Astrologer, Palmist, Numerologist & 16-Zone Vastu Consultant).
 
