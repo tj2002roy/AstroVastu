@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Award, Sparkles, UserCircle, ChevronDown, PhoneCall, Check } from 'lucide-react';
+import { Award, Sparkles, UserCircle, ChevronDown, PhoneCall, Check, Compass } from 'lucide-react';
 import { useAstroStore } from '@/lib/store/useAstroStore';
 import { calculateDailyPanchang, PanchangResult } from '@/lib/astro/panchangEngine';
 
@@ -32,12 +32,10 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-30 w-full glass-panel border-b border-[#D4AF37]/20 bg-[#0A1128]/85 backdrop-blur-md">
       {/* Top Auspicious Ticker Banner */}
-      <div className="bg-gradient-to-r from-[#0A1128] via-[#16425B] to-[#0A1128] border-b border-[#D4AF37]/15 px-3 py-1 text-[11px] text-[#CED4DA] flex items-center justify-between overflow-x-auto whitespace-nowrap">
-        <div className="flex items-center gap-2">
-          <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#D4AF37] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#D4AF37]"></span>
-          </span>
+      <div className="bg-gradient-to-r from-[#0A1128] via-[#16425B] to-[#0A1128] border-b border-[#D4AF37]/15 px-2.5 sm:px-4 py-1 text-[10.5px] sm:text-[11px] text-[#CED4DA] flex items-center justify-between overflow-x-auto whitespace-nowrap scrollbar-none">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Sacred Celestial Zodiac Wheel rotating slowly clockwise */}
+          <Compass className="w-3.5 h-3.5 text-[#D4AF37] animate-spin-slow shrink-0" />
           <span className="text-[#D4AF37] font-semibold">Live Vedic Muhurat:</span>
           <span>{panchang.nakshatra} ({panchang.nakshatraBengali})</span>
           <span className="text-slate-500">•</span>
@@ -57,10 +55,10 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Main Header Row */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 h-16 flex items-center justify-between gap-3">
+      <div className="max-w-7xl mx-auto px-2.5 sm:px-4 lg:px-6 h-15 sm:h-16 flex items-center justify-between gap-2 sm:gap-3">
         {/* Mobile & Tablet Guruji Brand Identity with Official Logo */}
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="relative w-11 h-11 rounded-full p-0.5 bg-gradient-to-tr from-[#D4AF37] via-[#FFF1C5] to-[#B87333] shrink-0 shadow-[0_0_12px_rgba(212,175,55,0.3)]">
+        <Link href="/" className="flex items-center gap-2 sm:gap-2.5 min-w-0 shrink">
+          <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full p-0.5 bg-gradient-to-tr from-[#D4AF37] via-[#FFF1C5] to-[#B87333] shrink-0 shadow-[0_0_12px_rgba(212,175,55,0.3)]">
             <Image
               src="/images/brand_logo_emblem.jpg"
               alt="Sri Suvabrata Bharati Official Logo"
@@ -73,14 +71,13 @@ export const Header: React.FC = () => {
               <Award className="w-2.5 h-2.5 text-[#D4AF37]" />
             </div>
           </div>
-          <div>
-            <div className="flex items-center gap-1">
-              <span className="font-serif font-bold text-sm sm:text-base tracking-wide text-[#F8F9FA] leading-tight">
-                Sri Suvabrata Bharati
-              </span>
-            </div>
-            <p className="text-[10px] text-[#D4AF37] font-medium leading-none mt-0.5">
-              Gold Medalist Astrologer, Palmist &amp; Vastu Expert
+          <div className="min-w-0">
+            <h1 className="font-serif font-bold text-xs sm:text-base tracking-tight sm:tracking-wide text-[#F8F9FA] leading-tight truncate">
+              Sri Suvabrata Bharati
+            </h1>
+            <p className="text-[9px] sm:text-[10px] text-[#D4AF37] font-medium leading-none mt-0.5 truncate">
+              <span className="sm:hidden">Gold Medalist • Astro-Vastu</span>
+              <span className="hidden sm:inline">Gold Medalist Astrologer, Palmist &amp; Vastu Expert</span>
             </p>
           </div>
         </Link>
@@ -92,20 +89,20 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Right Actions: Kundli Profile Selector & Quick Consultation CTA */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {/* Quick Kundli Profile Selector */}
           {profiles.length > 0 && (
             <div className="relative">
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#1C2541]/90 hover:bg-[#1C2541] border border-[#D4AF37]/30 text-xs transition-colors"
+                className="flex items-center gap-1 p-1.5 sm:px-2.5 sm:py-1.5 rounded-lg bg-[#1C2541]/90 hover:bg-[#1C2541] border border-[#D4AF37]/30 text-xs transition-colors"
                 title="Switch Active Kundli Profile"
               >
-                <UserCircle className="w-4 h-4 text-[#D4AF37]" />
-                <span className="max-w-[85px] sm:max-w-[120px] truncate font-medium text-[#F8F9FA]">
+                <UserCircle className="w-4 h-4 text-[#D4AF37] shrink-0" />
+                <span className="hidden sm:inline max-w-[85px] lg:max-w-[120px] truncate font-medium text-[#F8F9FA]">
                   {activeProfile?.fullName || 'Profiles'}
                 </span>
-                <ChevronDown className="w-3 h-3 text-[#CED4DA]" />
+                <ChevronDown className="w-3 h-3 text-[#CED4DA] shrink-0" />
               </button>
 
               {/* Profile Dropdown Menu */}
@@ -164,9 +161,10 @@ export const Header: React.FC = () => {
           {/* Quick Book CTA */}
           <Link
             href="/services"
-            className="gold-btn text-xs px-3.5 py-1.5 rounded-lg font-bold shadow-md active:scale-95 transition-transform shrink-0"
+            className="gold-btn text-[11px] sm:text-xs px-2.5 sm:px-3.5 py-1.5 rounded-lg font-bold shadow-md active:scale-95 transition-transform shrink-0 whitespace-nowrap"
           >
-            Consult Now
+            <span className="sm:hidden">Consult</span>
+            <span className="hidden sm:inline">Consult Now</span>
           </Link>
         </div>
       </div>

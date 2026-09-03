@@ -31,6 +31,27 @@ html, body {
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* Slow Clockwise Rotation for Celestial Wheels */
+@keyframes spin-clockwise-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-clockwise-slow 14s linear infinite;
 }
 
 /* Scrollbar styling */

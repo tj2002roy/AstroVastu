@@ -71,8 +71,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
           </button>
         </div>
 
-        {/* Scrollable Body */}
-        <div className="p-5 overflow-y-auto flex-1 overscroll-contain">
+        {/* Scrollable Body with substantial bottom clearance */}
+        <div className="p-4 sm:p-5 pb-36 sm:pb-8 overflow-y-auto flex-1 overscroll-contain">
           {children}
         </div>
       </div>

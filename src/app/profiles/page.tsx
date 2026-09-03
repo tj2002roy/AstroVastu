@@ -96,7 +96,7 @@ export default function ProfilesPage() {
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="space-y-6 pb-36 sm:pb-16">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
@@ -422,10 +422,10 @@ export default function ProfilesPage() {
             />
           </div>
 
-          <div className="pt-2">
+          <div className="pt-3 pb-12 sm:pb-4">
             <button
               type="submit"
-              className="w-full gold-btn py-3 rounded-xl font-bold text-xs sm:text-sm shadow-md"
+              className="w-full gold-btn py-3.5 rounded-xl font-bold text-xs sm:text-sm shadow-xl active:scale-98 transition-transform cursor-pointer"
             >
               {editingProfileId ? 'Update Birth Profile' : 'Save & Cast Birth Profile'}
             </button>
