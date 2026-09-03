@@ -62,13 +62,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cinzel.variable} ${inter.variable} dark h-full`}>
+    <html lang="en" suppressHydrationWarning className={`${cinzel.variable} ${inter.variable} dark h-full`}>
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#0A1128] text-[#F8F9FA] selection:bg-[#D4AF37] selection:text-[#0A1128]">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-[#0A1128] text-[#F8F9FA] selection:bg-[#D4AF37] selection:text-[#0A1128]"
+      >
         {children}
       </body>
     </html>

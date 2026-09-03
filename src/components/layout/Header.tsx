@@ -29,28 +29,89 @@ export const Header: React.FC = () => {
 
   const activeProfile = profiles.find((p) => p.id === activeProfileId) || profiles[0];
 
+  // Render a single dynamic Panchang / Chamber information item for the scrolling marquee
+  const renderTickerContent = (isAriaHidden = false) => (
+    <div
+      className="inline-flex items-center gap-2 sm:gap-2.5 shrink-0 px-4 sm:px-6"
+      aria-hidden={isAriaHidden ? 'true' : undefined}
+    >
+      {/* Sacred Celestial Zodiac Wheel rotating slowly clockwise */}
+      <Compass className="w-3.5 h-3.5 text-[#D4AF37] animate-spin-slow shrink-0" />
+      <span className="text-[#D4AF37] font-semibold tracking-wide">Live Vedic Muhurat:</span>
+      <span className="text-[#CED4DA]">{panchang.nakshatra} ({panchang.nakshatraBengali})</span>
+      <span className="text-slate-500">•</span>
+      <span className="text-[#F3E5AB] font-medium">{panchang.activeMuhuratTicker}</span>
+      <span className="text-slate-500">•</span>
+      <span className="text-amber-300/90 font-medium">Chambers: Jalpaiguri &amp; Siliguri</span>
+      <span className="text-slate-500">•</span>
+      <a
+        href="tel:+917076715202"
+        tabIndex={isAriaHidden ? -1 : 0}
+        className="text-[#D4AF37] hover:underline inline-flex items-center gap-1 font-semibold transition-colors"
+        title="Call Chamber Desk"
+      >
+        <PhoneCall className="w-3 h-3" />
+        <span>Chamber Desk: +91 70767 15202 / 94743 23694</span>
+      </a>
+      <span className="text-slate-500 ml-1.5 sm:ml-2.5">•</span>
+    </div>
+  );
+
+  // 3 repetitions per track half guarantees continuous coverage on ultra-wide screens with zero gap
+  const loopCopies = [0, 1, 2];
+
   return (
     <header className="sticky top-0 z-30 w-full glass-panel border-b border-[#D4AF37]/20 bg-[#0A1128]/85 backdrop-blur-md">
       {/* Top Auspicious Ticker Banner */}
-      <div className="bg-gradient-to-r from-[#0A1128] via-[#16425B] to-[#0A1128] border-b border-[#D4AF37]/15 px-2.5 sm:px-4 py-1 text-[10.5px] sm:text-[11px] text-[#CED4DA] flex items-center justify-between overflow-x-auto whitespace-nowrap scrollbar-none">
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Sacred Celestial Zodiac Wheel rotating slowly clockwise */}
-          <Compass className="w-3.5 h-3.5 text-[#D4AF37] animate-spin-slow shrink-0" />
-          <span className="text-[#D4AF37] font-semibold">Live Vedic Muhurat:</span>
-          <span>{panchang.nakshatra} ({panchang.nakshatraBengali})</span>
-          <span className="text-slate-500">•</span>
-          <span className="text-[#F3E5AB] font-medium">{panchang.activeMuhuratTicker}</span>
+      <div
+        className="ticker-container group relative w-full overflow-hidden bg-gradient-to-r from-[#0A1128] via-[#16425B] to-[#0A1128] border-b border-[#D4AF37]/15 py-1 text-[10.5px] sm:text-[11px] text-[#CED4DA] flex items-center select-none"
+        role="region"
+        aria-label="Live Vedic Muhurat & Chamber Information"
+      >
+        {/* Soft edge gradient fades for graceful entry and exit */}
+        <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-6 sm:w-12 bg-gradient-to-r from-[#0A1128] to-transparent z-10 motion-reduce:hidden" />
+        <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-6 sm:w-12 bg-gradient-to-l from-[#0A1128] to-transparent z-10 motion-reduce:hidden" />
+
+        {/* Continuous Scrolling Marquee Track (moves Right -> Left seamlessly) */}
+        <div className="animate-marquee-track flex w-max items-center whitespace-nowrap motion-reduce:hidden">
+          {/* Primary loop track */}
+          <div className="flex shrink-0 items-center">
+            {loopCopies.map((i) => (
+              <React.Fragment key={`p-${i}`}>
+                {renderTickerContent(i > 0)}
+              </React.Fragment>
+            ))}
+          </div>
+          {/* Duplicate loop track for 100% seamless, jump-free infinite looping */}
+          <div className="flex shrink-0 items-center" aria-hidden="true">
+            {loopCopies.map((i) => (
+              <React.Fragment key={`d-${i}`}>
+                {renderTickerContent(true)}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
-        <div className="hidden lg:flex items-center gap-3 text-[11px]">
-          <span className="text-amber-300/90 font-medium">Chambers: Jalpaiguri &amp; Siliguri</span>
-          <span className="text-slate-500">•</span>
-          <a
-            href="tel:+917076715202"
-            className="text-[#D4AF37] hover:underline flex items-center gap-1 font-semibold"
-          >
-            <PhoneCall className="w-3 h-3" />
-            <span>Chamber Desk: +91 70767 15202 / 94743 23694</span>
-          </a>
+
+        {/* Static Accessible Fallback (Active when OS prefers-reduced-motion is enabled) */}
+        <div className="hidden motion-reduce:flex w-full items-center justify-between px-2.5 sm:px-4 text-[10.5px] sm:text-[11px] overflow-x-auto whitespace-nowrap scrollbar-none">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <Compass className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
+            <span className="text-[#D4AF37] font-semibold">Live Vedic Muhurat:</span>
+            <span>{panchang.nakshatra} ({panchang.nakshatraBengali})</span>
+            <span className="text-slate-500">•</span>
+            <span className="text-[#F3E5AB] font-medium">{panchang.activeMuhuratTicker}</span>
+          </div>
+          <div className="flex items-center gap-3 text-[11px] shrink-0 ml-4">
+            <span className="text-amber-300/90 font-medium">Chambers: Jalpaiguri &amp; Siliguri</span>
+            <span className="text-slate-500">•</span>
+            <a
+              href="tel:+917076715202"
+              className="text-[#D4AF37] hover:underline flex items-center gap-1 font-semibold"
+            >
+              <PhoneCall className="w-3 h-3" />
+              <span>Chamber Desk: +91 70767 15202 / 94743 23694</span>
+            </a>
+          </div>
         </div>
       </div>
 

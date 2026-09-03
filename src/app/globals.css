@@ -54,6 +54,37 @@ button, a, input, select, textarea {
   animation: spin-clockwise-slow 14s linear infinite;
 }
 
+/* Continuous Seamless Marquee Ticker (Right to Left) */
+@keyframes ticker-scroll-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: ticker-scroll-left 64s linear infinite;
+}
+
+/* Pause smoothly on hover (desktop) or active touch */
+.ticker-container:hover .animate-marquee-track,
+.ticker-container:active .animate-marquee-track {
+  animation-play-state: paused;
+}
+
+/* Respect Accessibility preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
